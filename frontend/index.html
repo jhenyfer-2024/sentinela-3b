@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MedFlow Kids - Login</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: Arial, sans-serif;
+
+      background-image:
+        linear-gradient(
+          rgba(80, 180, 230, 0.30),
+          rgba(100, 210, 180, 0.30)
+        ),
+
+        
+        url(pis.jpg);
+
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      overflow: hidden;
+    }
+
+
+    /* DECORAÇÕES */
+
+    .bolinha {
+      position: fixed;
+
+      border-radius: 50%;
+
+      opacity: 0.7;
+
+      animation: flutuar 5s infinite ease-in-out;
+    }
+
+    .bolinha1 {
+      width: 80px;
+      height: 80px;
+
+      background: #ffd54f;
+
+      top: 8%;
+      left: 8%;
+    }
+
+    .bolinha2 {
+      width: 55px;
+      height: 55px;
+
+      background: #ba68c8;
+
+      bottom: 12%;
+      right: 8%;
+
+      animation-delay: 1s;
+    }
+
+    .bolinha3 {
+      width: 35px;
+      height: 35px;
+
+      background: #66bb6a;
+
+      top: 20%;
+      right: 15%;
+
+      animation-delay: 2s;
+    }
+
+
+    /* CARD */
+
+    .login-box {
+
+      position: relative;
+
+      width: 390px;
+
+      padding: 35px 40px 40px;
+
+      background: rgba(255,255,255,0.96);
+
+      border-radius: 30px;
+
+      border: 5px solid #81d4fa;
+
+      box-shadow:
+        0 15px 40px rgba(0, 100, 160, 0.25);
+
+      animation: entrada 0.8s ease;
+
+      z-index: 2;
+    }
+
+
+    /* LOGO */
+
+    .logo-area {
+
+      display: flex;
+
+      justify-content: center;
+
+      margin-bottom: 12px;
+    }
+
+
+    .logo {
+
+      width: 95px;
+      height: 95px;
+
+      position: relative;
+
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      border-radius: 35px;
+
+      background: linear-gradient(
+        135deg,
+        #4fc3f7,
+        #81d4fa
+      );
+
+      box-shadow:
+        0 8px 20px rgba(79,195,247,0.35);
+
+      animation: pular 2s infinite;
+    }
+
+
+    /* SÍMBOLO HOSPITALAR */
+
+    .cruz {
+
+      position: absolute;
+
+      width: 65px;
+      height: 65px;
+
+      background: white;
+
+      border-radius: 20px;
+
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      box-shadow:
+        0 5px 12px rgba(0,0,0,0.12);
+    }
+
+
+    .cruz::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 40px;
+      height: 12px;
+
+      background: #ef5350;
+
+      border-radius: 5px;
+    }
+
+
+    .cruz::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 12px;
+      height: 40px;
+
+      background: #ef5350;
+
+      border-radius: 5px;
+    }
+
+
+    /* URSINHO */
+
+    .urso {
+
+      position: absolute;
+
+      z-index: 3;
+
+      font-size: 38px;
+
+      transform: translateY(3px);
+    }
+
+
+    /* NOME */
+
+    .nome {
+
+      text-align: center;
+
+      font-size: 29px;
+
+      font-weight: bold;
+
+      color: #0288d1;
+
+      letter-spacing: 0.5px;
+    }
+
+
+    .nome span {
+      color: #66bb6a;
+    }
+
+
+    .subtitulo {
+
+      text-align: center;
+
+      color: #78909c;
+
+      font-size: 14px;
+
+      margin-top: 6px;
+
+      margin-bottom: 28px;
+    }
+
+
+    /* CAMPOS */
+
+    .campo {
+
+      position: relative;
+
+      margin-bottom: 16px;
+
+      animation: campo 0.6s ease backwards;
+    }
+
+
+    .campo input {
+
+      width: 100%;
+
+      padding: 15px 16px 15px 48px;
+
+      border: 3px solid #e1f5fe;
+
+      border-radius: 15px;
+
+      background: #f5fcff;
+
+      color: #37474f;
+
+      font-size: 15px;
+
+      outline: none;
+
+      transition: 0.25s;
+    }
+
+
+    .campo input:focus {
+
+      background: white;
+
+      border-color: #4fc3f7;
+
+      transform: scale(1.02);
+
+      box-shadow:
+        0 5px 15px rgba(79,195,247,0.18);
+    }
+
+
+    .icone {
+
+      position: absolute;
+
+      left: 15px;
+
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      font-size: 20px;
+    }
+
+
+    /* BOTÃO */
+
+    .btn {
+
+      width: 100%;
+
+      padding: 15px;
+
+      margin-top: 5px;
+
+      border: none;
+
+      border-radius: 15px;
+
+      background: linear-gradient(
+        135deg,
+        #42a5f5,
+        #66bb6a
+      );
+
+      color: white;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 7px 15px rgba(66,165,245,0.25);
+
+      transition: 0.25s;
+    }
+
+
+    .btn:hover {
+
+      transform: translateY(-3px) scale(1.02);
+
+      box-shadow:
+        0 10px 20px rgba(66,165,245,0.35);
+    }
+
+
+    .btn:active {
+
+      transform: scale(0.96);
+    }
+
+
+    /* RODAPÉ */
+
+    .rodape {
+
+      text-align: center;
+
+      margin-top: 22px;
+
+      color: #90a4ae;
+
+      font-size: 12px;
+    }
+
+
+    /* ANIMAÇÕES */
+
+    @keyframes entrada {
+
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+    }
+
+
+    @keyframes pular {
+
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-7px);
+      }
+
+    }
+
+
+    @keyframes campo {
+
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+    }
+
+
+    @keyframes flutuar {
+
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+      .login-box {
+
+        width: calc(100% - 30px);
+
+        padding: 30px 25px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <div class="bolinha bolinha1"></div>
+
+  <div class="bolinha bolinha2"></div>
+
+  <div class="bolinha bolinha3"></div>
+
+
+  <div class="login-box">
+
+
+    <!-- LOGO -->
+
+    <div class="logo-area">
+
+      <div class="logo">
+
+        <div class="cruz"></div>
+
+        <div class="urso">
+          🧸
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="nome">
+      MedFlow <span>Kids</span>
+    </div>
+
+
+    <div class="subtitulo">
+      Cuidando dos pequenos com carinho 💙
+    </div>
+
+
+    <div class="campo">
+
+      <span class="icone">
+        👩‍⚕️
+      </span>
+
+      <input
+        id="usuario"
+        placeholder="Usuário"
+        autocomplete="username"
+      >
+
+    </div>
+
+
+    <div class="campo">
+
+      <span class="icone">
+        🔐
+      </span>
+
+      <input
+        id="senha"
+        type="password"
+        placeholder="Senha"
+        autocomplete="current-password"
+      >
+
+    </div>
+
+
+    <button class="btn" onclick="login()">
+      🚀 Entrar
+    </button>
+
+
+    <div class="rodape">
+      Um atendimento feito para cuidar 💙
+    </div>
+
+
+  </div>
+
+
+  <script>
+
+    function login() {
+
+      fetch("http://localhost:3000/login", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          usuario:
+            document.getElementById("usuario").value,
+
+          senha:
+            document.getElementById("senha").value
+
+        })
+
+      })
+
+      .then(r => r.json())
+
+      .then(data => {
+
+        if (data.tipo === "triagem") {
+          location.href = "triagem.html";
+        }
+
+        if (data.tipo === "medico") {
+          location.href = "medico.html";
+        }
+
+        if (data.tipo === "atendimento") {
+          location.href = "atendimento.html";
+        }
+
+      })
+
+      .catch(error => {
+
+        console.error(error);
+
+        alert("Erro ao conectar com o servidor.");
+
+      });
+
+    }
+
+  </script>
+
+</body>
+
+</html>

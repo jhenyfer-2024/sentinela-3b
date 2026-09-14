@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MedFlow Kids - Triagem</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e8f8ff, #f3fff5);
+      color: #37474f;
+    }
+
+    /* ================================
+       CONTAINER
+       ================================ */
+
+    .container {
+      max-width: 1050px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
+
+    /* ================================
+       CABEÇALHO
+       ================================ */
+
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 18px 22px;
+      margin-bottom: 18px;
+
+      background: white;
+      border: 2px solid #b3e5fc;
+      border-radius: 8px;
+
+      box-shadow: 0 5px 18px rgba(33,150,243,0.10);
+    }
+
+    .titulo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #4fc3f7;
+      border-radius: 8px;
+
+      font-size: 31px;
+
+      box-shadow: 0 5px 12px rgba(79,195,247,0.25);
+    }
+
+    .titulo h2 {
+      margin: 0;
+      color: #0277bd;
+      font-size: 24px;
+    }
+
+    .titulo p {
+      margin: 5px 0 0;
+      color: #78909c;
+      font-size: 13px;
+    }
+
+    /* ================================
+       BOTÕES
+       ================================ */
+
+    .btn-abrir-tv {
+      background: #26a69a;
+      color: white;
+
+      border: none;
+      border-radius: 6px;
+
+      padding: 11px 16px;
+
+      font-size: 14px;
+      font-weight: bold;
+
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-abrir-tv:hover {
+      background: #168f84;
+      transform: translateY(-2px);
+    }
+
+    /* ================================
+       FILA
+       ================================ */
+
+    .pacientes-fila {
+      background: white;
+
+      padding: 20px;
+      margin-bottom: 18px;
+
+      border: 2px solid #b3e5fc;
+      border-radius: 8px;
+
+      box-shadow: 0 5px 18px rgba(33,150,243,0.08);
+    }
+
+    .fila-titulo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 16px;
+    }
+
+    .fila-titulo h3 {
+      margin: 0;
+      color: #0277bd;
+      font-size: 18px;
+    }
+
+    .fila-titulo span {
+      background: #e8f5e9;
+      color: #388e3c;
+
+      padding: 6px 10px;
+
+      border-radius: 5px;
+
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* ================================
+       PACIENTE
+       ================================ */
+
+    .fila-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 13px 15px;
+      margin-bottom: 8px;
+
+      background: #f8fdff;
+
+      border: 1px solid #cceaf7;
+      border-left: 5px solid #4fc3f7;
+
+      border-radius: 6px;
+
+      transition: 0.2s;
+    }
+
+    .fila-item:hover {
+      background: #eefaff;
+      transform: translateX(3px);
+    }
+
+    .paciente-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .paciente-icone {
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #e1f5fe;
+      border-radius: 6px;
+
+      font-size: 22px;
+    }
+
+    .fila-item strong {
+      display: block;
+
+      color: #0277bd;
+      font-size: 15px;
+
+      margin-bottom: 4px;
+    }
+
+    .fila-item small {
+      color: #78909c;
+      font-size: 12px;
+    }
+
+    .btn-tv {
+      background: #26a69a;
+      color: white;
+
+      border: none;
+      border-radius: 5px;
+
+      padding: 9px 13px;
+
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+
+      transition: 0.2s;
+    }
+
+    .btn-tv:hover {
+      background: #168f84;
+    }
+
+    .btn-atualizar {
+      margin-top: 6px;
+
+      background: #90caf9;
+      color: #075985;
+
+      border: none;
+      border-radius: 5px;
+
+      padding: 8px 12px;
+
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn-atualizar:hover {
+      background: #64b5f6;
+      color: white;
+    }
+
+    /* ================================
+       FORMULÁRIO
+       ================================ */
+
+    .triagem-box {
+      background: white;
+
+      padding: 22px;
+
+      border: 2px solid #c8e6c9;
+      border-radius: 8px;
+
+      box-shadow: 0 5px 18px rgba(76,175,80,0.08);
+    }
+
+    .triagem-titulo {
+      margin: 0 0 20px;
+
+      color: #43a047;
+      font-size: 20px;
+
+      border-bottom: 2px solid #e8f5e9;
+      padding-bottom: 12px;
+    }
+
+    .campo {
+      margin-bottom: 14px;
+    }
+
+    .campo label {
+      display: block;
+
+      margin-bottom: 6px;
+
+      color: #546e7a;
+
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .campo input,
+    .campo select,
+    .campo textarea {
+      width: 100%;
+
+      padding: 12px 14px;
+
+      border: 2px solid #e1f5fe;
+      border-radius: 6px;
+
+      background: #fafdff;
+
+      color: #37474f;
+
+      font-size: 14px;
+
+      outline: none;
+
+      transition: 0.2s;
+    }
+
+    .campo input:focus,
+    .campo select:focus,
+    .campo textarea:focus {
+      background: white;
+      border-color: #4fc3f7;
+
+      box-shadow: 0 3px 10px rgba(33,150,243,0.10);
+    }
+
+    .campo textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* ================================
+       DUAS COLUNAS
+       ================================ */
+
+    .campos-duplos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    /* ================================
+       RESULTADO
+       ================================ */
+
+    #resultado {
+      padding: 12px;
+
+      margin: 15px 0;
+
+      text-align: center;
+
+      border-radius: 6px;
+
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    #resultado:empty {
+      display: none;
+    }
+
+    #resultado.verde {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 2px solid #c8e6c9;
+    }
+
+    #resultado.amarelo {
+      background: #fff8e1;
+      color: #f57f17;
+      border: 2px solid #ffe082;
+    }
+
+    #resultado.vermelho {
+      background: #ffebee;
+      color: #c62828;
+      border: 2px solid #ffcdd2;
+    }
+
+    /* ================================
+       SALVAR
+       ================================ */
+
+    .btn-salvar {
+      width: 100%;
+
+      padding: 14px;
+
+      border: none;
+      border-radius: 6px;
+
+      background: #43a047;
+      color: white;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .btn-salvar:hover {
+      background: #388e3c;
+      transform: translateY(-2px);
+    }
+
+    /* ================================
+       CELULAR
+       ================================ */
+
+    @media (max-width: 650px) {
+
+      .cabecalho {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+
+      .btn-abrir-tv {
+        width: 100%;
+      }
+
+      .fila-titulo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .fila-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .btn-tv {
+        width: 100%;
+      }
+
+      .campos-duplos {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- CABEÇALHO -->
+
+  <div class="cabecalho">
+
+    <div class="titulo">
+
+      <div class="logo">
+        🧸
+      </div>
+
+      <div>
+
+        <h2>🩺 MedFlow Kids</h2>
+
+        <p>
+          Triagem e acolhimento infantil
+        </p>
+
+      </div>
+
+    </div>
+
+    <button
+      class="btn-abrir-tv"
+      onclick="window.open('tv.html','_blank')"
+    >
+      📺 Abrir Tela da TV
+    </button>
+
+  </div>
+
+
+  <!-- FILA -->
+
+  <div class="pacientes-fila">
+
+    <div class="fila-titulo">
+
+      <h3>
+        🧸 Pacientes aguardando triagem
+      </h3>
+
+      <span>
+        📺 Chamar no guichê
+      </span>
+
+    </div>
+
+    <div id="fila-pacientes">
+
+      <p style="color:#78909c;text-align:center;">
+        🧸 Carregando pacientes...
+      </p>
+
+    </div>
+
+    <button
+      class="btn-atualizar"
+      onclick="carregarPacientes()"
+    >
+      🔄 Atualizar lista
+    </button>
+
+  </div>
+
+
+  <!-- FORMULÁRIO -->
+
+  <div class="triagem-box">
+
+    <h3 class="triagem-titulo">
+      🩺 Formulário de Triagem Infantil
+    </h3>
+
+
+    <div class="campo">
+
+      <label>
+        👤 Nome do paciente
+      </label>
+
+      <input
+        id="nome"
+        placeholder="Digite o nome da criança"
+      >
+
+    </div>
+
+
+    <div class="campo">
+
+      <label>
+        🩺 Sintoma principal
+      </label>
+
+      <select id="sintoma">
+
+        <option value="">
+          Selecione o sintoma
+        </option>
+
+        <option value="dor_leve">
+          🤕 Dor leve
+        </option>
+
+        <option value="resfriado">
+          🤧 Resfriado
+        </option>
+
+        <option value="coriza">
+          🤧 Coriza
+        </option>
+
+        <option value="tosse">
+          😷 Tosse
+        </option>
+
+        <option value="febre">
+          🌡️ Febre
+        </option>
+
+        <option value="vomito">
+          🤢 Vômito
+        </option>
+
+        <option value="diarreia">
+          💧 Diarreia
+        </option>
+
+        <option value="falta_ar_moderada">
+          🫁 Falta de ar moderada
+        </option>
+
+        <option value="falta_ar_grave">
+          🫁 Falta de ar grave
+        </option>
+
+        <option value="infarto">
+          🚨 Suspeita de infarto
+        </option>
+
+        <option value="avc">
+          🚨 Suspeita de AVC
+        </option>
+
+        <option value="convulsao">
+          🚨 Convulsão
+        </option>
+
+        <option value="hemorragia">
+          🚨 Hemorragia
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="campos-duplos">
+
+      <div class="campo">
+
+        <label>
+          🌡️ Temperatura
+        </label>
+
+        <input
+          id="temp"
+          type="number"
+          step="0.1"
+          placeholder="Ex: 37.5"
+        >
+
+      </div>
+
+
+      <div class="campo">
+
+        <label>
+          ⚠️ Alergias
+        </label>
+
+        <input
+          id="alergia"
+          placeholder="Digite as alergias"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="campo">
+
+      <label>
+        📝 Observações
+      </label>
+
+      <textarea
+        id="observacao"
+        placeholder="Informações importantes sobre a criança..."
+      ></textarea>
+
+    </div>
+
+
+    <div id="resultado"></div>
+
+
+    <button
+      class="btn-salvar"
+      onclick="salvar()"
+    >
+      💚 Salvar Triagem
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ================================
+   CARREGAR PACIENTES
+   ================================ */
+
+function carregarPacientes() {
+
+  fetch("/pacientes")
+
+    .then(r => r.json())
+
+    .then(pacientes => {
+
+      const div =
+        document.getElementById("fila-pacientes");
+
+      const fila =
+        pacientes.filter(
+          p => p.status === "triagem"
+        );
+
+      if (fila.length === 0) {
+
+        div.innerHTML = `
+          <div style="
+            text-align:center;
+            padding:25px;
+            color:#90a4ae;
+          ">
+            🧸 Nenhum pequeno paciente aguardando.
+            <br>
+            <small>
+              A fila está tranquila! 💙
+            </small>
+          </div>
+        `;
+
+        return;
+      }
+
+      div.innerHTML = "";
+
+      fila.forEach(p => {
+
+        const item =
+          document.createElement("div");
+
+        item.className = "fila-item";
+
+        item.innerHTML = `
+
+          <div class="paciente-info">
+
+            <div class="paciente-icone">
+              🧸
+            </div>
+
+            <div>
+
+              <strong>
+                ${p.nome}
+              </strong>
+
+              <small>
+                CPF: ${p.cpf || "—"}
+                |
+                Tipo: ${p.tipo || "—"}
+              </small>
+
+            </div>
+
+          </div>
+
+          <button
+            class="btn-tv"
+            onclick="chamarNaTV('${p.nome}')"
+          >
+            📺 Chamar na TV
+          </button>
+
+        `;
+
+        div.appendChild(item);
+
+      });
+
+    })
+
+    .catch(() => {
+
+      document.getElementById(
+        "fila-pacientes"
+      ).innerHTML = `
+
+        <p style="
+          color:#e53935;
+          text-align:center;
+        ">
+          ❌ Erro ao carregar pacientes.
+        </p>
+
+      `;
+
+    });
+
+}
+
+
+/* ================================
+   CHAMAR NA TV
+   ================================ */
+
+function chamarNaTV(nome) {
+
+  fetch("/tv/chamar", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+
+      localTipo: "GUICHÊ",
+
+      localNumero: "01",
+
+      paciente: nome
+
+    })
+
+  })
+
+  .then(r => r.json())
+
+  .then(() => {
+
+    alert(
+      "✅ " +
+      nome +
+      " foi chamado na TV para o Guichê 01!"
+    );
+
+  });
+
+}
+
+
+/* ================================
+   CLASSIFICAR RISCO
+   ================================ */
+
+function classificarRisco(
+  sintoma,
+  temperatura
+) {
+
+  const vermelhos = [
+    "infarto",
+    "avc",
+    "convulsao",
+    "hemorragia",
+    "falta_ar_grave"
+  ];
+
+  const amarelos = [
+    "febre",
+    "vomito",
+    "diarreia",
+    "falta_ar_moderada"
+  ];
+
+  if (temperatura >= 39)
+    return "vermelho";
+
+  if (vermelhos.includes(sintoma))
+    return "vermelho";
+
+  if (amarelos.includes(sintoma))
+    return "amarelo";
+
+  return "verde";
+
+}
+
+
+/* ================================
+   SALVAR
+   ================================ */
+
+function salvar() {
+
+  const nome =
+    document.getElementById("nome").value;
+
+  const sintoma =
+    document.getElementById("sintoma").value;
+
+  const temperatura =
+    Number(
+      document.getElementById("temp").value
+    );
+
+  const alergia =
+    document.getElementById("alergia").value;
+
+  const observacao =
+    document.getElementById("observacao").value;
+
+  if (!nome) {
+
+    alert("🧸 Digite o nome do paciente.");
+
+    return;
+  }
+
+  if (!sintoma) {
+
+    alert("🩺 Selecione o sintoma.");
+
+    return;
+  }
+
+  const risco =
+    classificarRisco(
+      sintoma,
+      temperatura
+    );
+
+
+  fetch("/triagem", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+
+      nome,
+      sintoma,
+      temperatura,
+      alergia,
+      observacao,
+      risco
+
+    })
+
+  })
+
+  .then(r => r.json())
+
+  .then(() => {
+
+    const resultado =
+      document.getElementById("resultado");
+
+    resultado.className = risco;
+
+    resultado.innerHTML =
+      "Classificação: " +
+      risco.toUpperCase();
+
+    alert(
+      "✅ Triagem salva com sucesso!"
+    );
+
+
+    document.getElementById("nome").value = "";
+    document.getElementById("sintoma").value = "";
+    document.getElementById("temp").value = "";
+    document.getElementById("alergia").value = "";
+    document.getElementById("observacao").value = "";
+
+    carregarPacientes();
+
+  });
+
+}
+
+
+/* ================================
+   INICIALIZAÇÃO
+   ================================ */
+
+carregarPacientes();
+
+setInterval(
+  carregarPacientes,
+  10000
+);
+
+</script>
+
+</body>
+</html>
