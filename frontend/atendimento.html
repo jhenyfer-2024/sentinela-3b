@@ -1,36 +1,89 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="style.css"></head>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Atendimento</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
+
 <div class="container">
-<h2>Atendimento</h2>
 
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
+  <h2>Atendimento</h2>
 
-<select id="tipo">
-  <option>Convenio</option>
-  <option>Particular</option>
-</select>
+  <input id="nome" placeholder="Nome">
 
-<input type="file" id="foto">
+  <input id="cpf" placeholder="CPF">
 
-<button onclick="cadastrar()">Cadastrar</button>
+  <select id="tipo">
+    <option>Convenio</option>
+    <option>Particular</option>
+  </select>
+
+  <input type="file" id="foto">
+
+  <button onclick="cadastrar()">
+    Cadastrar
+  </button>
+
 </div>
 
 <script>
-function cadastrar(){
- fetch("http://localhost:3000/atendimento",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    nome: nome.value,
-    cpf: cpf.value,
-    tipo: tipo.value
+
+function cadastrar() {
+
+  fetch("https://sentinela-3b-1.onrender.com/atendimento", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+
+      nome: document.getElementById("nome").value,
+
+      cpf: document.getElementById("cpf").value,
+
+      tipo: document.getElementById("tipo").value
+
+    })
+
   })
- });
- alert("Paciente enviado para triagem");
+
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error("Erro ao cadastrar paciente");
+    }
+
+    return response.json();
+
+  })
+
+  .then(data => {
+
+    console.log("Paciente cadastrado:", data);
+
+    alert("Paciente enviado para triagem");
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+    alert("Erro ao conectar com o servidor.");
+
+  });
+
 }
+
 </script>
+
 </body>
+
 </html>
