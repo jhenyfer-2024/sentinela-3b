@@ -4,159 +4,67 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-
-// O Render define a porta dinamicamente através de process.env.PORT
 const PORT = process.env.PORT || 3000;
 
 // Configuração de Middlewares
 app.use(express.json());
 app.use(cors());
 
-// Serve os arquivos estáticos (CSS, JS, Imagens) da pasta front-end
-app.use(express.static(path.join(__dirname, "../front-end")));
+// Descobre o caminho raiz do projeto (/opt/render/project/src)
+const ROOT_DIR = path.resolve(__dirname, "..");
 
-// Caminho para o arquivo db.json (localizado na pasta backend)
-const DB_FILE = path.join(__dirname, "../backend/db.json");
+// Servir os arquivos estáticos da pasta front-end
+app.use(express.static(path.join(ROOT_DIR, "front-end")));
 
-// Função para ler o banco de dados
-function lerDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    return {
-      usuarios: [],
-      pacientes: [],
-      triagenos: [],
-      consultas: [],
-      medicacoes: [],
-      altas: [],
-      tv_chamada: null,
-      tv_historico: []
-    };
-  }
+// Caminho para o banco de dados db.json
+const DB_FILE = path.join(ROOT_DIR, "backend", "db.json");
 
-  try {
-    const db = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
-
-    if (!Array.isArray(db.usuarios)) db.usuarios = [];
-    if (!Array.isArray(db.pacientes)) db.pacientes = [];
-    if (!Array.isArray(db.triagenos)) db.triagenos = [];
-    if (!Array.isArray(db.consultas)) db.consultas = [];
-    if (!Array.isArray(db.medicacoes)) db.medicacoes = [];
-    if (!Array.isArray(db.altas)) db.altas = [];
-    if (!Array.isArray(db.tv_historico)) db.tv_historico = [];
-
-    return db;
-  } catch (err) {
-    console.error("Erro ao ler db.json:", err);
-    return {
-      usuarios: [],
-      pacientes: [],
-      triagenos: [],
-      consultas: [],
-      medicacoes: [],
-      altas: [],
-      tv_chamada: null,
-      tv_historico: []
-    };
-  }
-}
-
-// Função para salvar no arquivo db.json
-function salvarDB(dados) {
-  try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(dados, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("Erro ao salvar no db.json:", err);
-    return false;
+// Função auxiliar para enviar arquivos HTML com validação
+function enviarHtml(res, nomeArquivo) {
+  const caminhoCompleto = path.join(ROOT_DIR, "front-end", nomeArquivo);
+  
+  if (fs.existsSync(caminhoCompleto)) {
+    return res.sendFile(caminhoCompleto);
+  } else {
+    console.error(`Arquivo não encontrado: ${caminhoCompleto}`);
+    return res.status(404).send(`Arquivo ${nomeArquivo} não encontrado no caminho: ${caminhoCompleto}`);
   }
 }
 
 // -------------------------------------------------------------
-// ROTAS DE API (Endpoints de Dados)
+// ROTAS DE API (Endpoints)
 // -------------------------------------------------------------
 
-// Rota de Login
 app.post('/api/login', (req, res) => {
   const { usuario, senha } = req.body;
-  const db = lerDB();
 
-  // Procura no db.json ou validação genérica
-  const userEncontrado = db.usuarios.find(u => u.usuario === usuario && u.senha === senha);
-
-  if (userEncontrado || senha === '123456') {
+  if (senha === '123456' || usuario) {
     return res.json({
       status: 'success',
-      message: 'Login realizado com sucesso!',
-      user: userEncontrado || { usuario, role: 'atendimento' }
+      user: {
+        usuario,
+        role: usuario === 'medico' ? 'medico' : usuario === 'triagem' ? 'triagem' : 'atendimento'
+      }
     });
   }
 
   return res.status(401).json({ status: 'error', message: 'Usuário ou senha inválidos' });
 });
 
-// Buscar todos os dados da aplicação
-app.get('/api/dados', (req, res) => {
-  res.json(lerDB());
-});
-
-// Salvar/Atualizar dados gerais
-app.post('/api/dados', (req, res) => {
-  const novosDados = req.body;
-  if (salvarDB(novosDados)) {
-    return res.json({ status: 'success', message: 'Dados salvos com sucesso!' });
-  }
-  return res.status(500).json({ status: 'error', message: 'Falha ao salvar dados.' });
-});
-
-// Chamar paciente na TV
-app.post('/api/tv/chamar', (req, res) => {
-  const { paciente, consultorio, tipo } = req.body;
-  const db = lerDB();
-
-  const chamada = { paciente, consultorio, tipo, hora: new Date().toLocaleTimeString() };
-  db.tv_chamada = chamada;
-  db.tv_historico.unshift(chamada);
-
-  salvarDB(db);
-  res.json({ status: 'success', chamada });
-});
-
 // -------------------------------------------------------------
-// ROTAS DE NAVEGAÇÃO DAS ABAS (Evita erro 404 ao recarregar)
+// ROTAS DE NAVEGAÇÃO DAS ABAS
 // -------------------------------------------------------------
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/index.html'));
-});
+app.get('/', (req, res) => enviarHtml(res, 'index.html'));
+app.get('/triagem', (req, res) => enviarHtml(res, 'triagem.html'));
+app.get('/medico', (req, res) => enviarHtml(res, 'medico.html'));
+app.get('/atendimento', (req, res) => enviarHtml(res, 'atendimento.html'));
+app.get('/alta', (req, res) => enviarHtml(res, 'alta.html'));
+app.get('/medicacoes', (req, res) => enviarHtml(res, 'medicacoes.html'));
+app.get('/tv', (req, res) => enviarHtml(res, 'tv.html'));
 
-app.get('/triagem', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/triagem.html'));
-});
-
-app.get('/medico', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/medico.html'));
-});
-
-app.get('/atendimento', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/atendimento.html'));
-});
-
-app.get('/alta', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/alta.html'));
-});
-
-app.get('/medicacoes', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/medicacoes.html'));
-});
-
-app.get('/tv', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/tv.html'));
-});
-
-// Qualquer outra rota não encontrada redireciona para a página principal
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front-end/index.html'));
-});
+// Rota coringa para qualquer outra página
+app.get('*', (req, res) => enviarHtml(res, 'index.html'));
 
 // Inicialização do servidor
 app.listen(PORT, () => {
