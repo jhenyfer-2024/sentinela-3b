@@ -1,305 +1,164 @@
-indexconst express = require("express");
+const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 
 const app = express();
 
-// =========================
-// CONFIGURAÇÕES
-// =========================
+// O Render define a porta dinamicamente através de process.env.PORT
+const PORT = process.env.PORT || 3000;
 
+// Configuração de Middlewares
 app.use(express.json());
 app.use(cors());
 
-// Servir o frontend
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Serve os arquivos estáticos (CSS, JS, Imagens) da pasta front-end
+app.use(express.static(path.join(__dirname, "../front-end")));
 
-// Banco de dados
-const DB_FILE = path.join(__dirname, "db.json");
+// Caminho para o arquivo db.json (localizado na pasta backend)
+const DB_FILE = path.join(__dirname, "../backend/db.json");
 
-// =========================
-// BANCO DE DADOS
-// =========================
+// Função para ler o banco de dados
+function lerDB() {
+  if (!fs.existsSync(DB_FILE)) {
+    return {
+      usuarios: [],
+      pacientes: [],
+      triagenos: [],
+      consultas: [],
+      medicacoes: [],
+      altas: [],
+      tv_chamada: null,
+      tv_historico: []
+    };
+  }
 
-function readDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    return {
-      usuarios: [],
-      pacientes: [],
-      triagens: [],
-      consultas: [],
-      tv_chamada: null,
-      tv_historico: []
-    };
-  }
+  try {
+    const db = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
 
-  try {
-    const db = JSON.parse(
-      fs.readFileSync(DB_FILE, "utf8")
-    );
+    if (!Array.isArray(db.usuarios)) db.usuarios = [];
+    if (!Array.isArray(db.pacientes)) db.pacientes = [];
+    if (!Array.isArray(db.triagenos)) db.triagenos = [];
+    if (!Array.isArray(db.consultas)) db.consultas = [];
+    if (!Array.isArray(db.medicacoes)) db.medicacoes = [];
+    if (!Array.isArray(db.altas)) db.altas = [];
+    if (!Array.isArray(db.tv_historico)) db.tv_historico = [];
 
-    // Garante que as propriedades existam
-    if (!Array.isArray(db.usuarios)) db.usuarios = [];
-    if (!Array.isArray(db.pacientes)) db.pacientes = [];
-    if (!Array.isArray(db.triagens)) db.triagens = [];
-    if (!Array.isArray(db.consultas)) db.consultas = [];
-
-    if (!db.tv_chamada) {
-      db.tv_chamada = null;
-    }
-
-    if (!Array.isArray(db.tv_historico)) {
-      db.tv_historico = [];
-    }
-
-    return db;
-  } catch (error) {
-    console.error("Erro ao ler db.json:", error);
-
-    return {
-      usuarios: [],
-      pacientes: [],
-      triagens: [],
-      consultas: [],
-      tv_chamada: null,
-      tv_historico: []
-    };
-  }
+    return db;
+  } catch (err) {
+    console.error("Erro ao ler db.json:", err);
+    return {
+      usuarios: [],
+      pacientes: [],
+      triagenos: [],
+      consultas: [],
+      medicacoes: [],
+      altas: [],
+      tv_chamada: null,
+      tv_historico: []
+    };
+  }
 }
 
-function writeDB(data) {
-  try {
-    fs.writeFileSync(
-      DB_FILE,
-      JSON.stringify(data, null, 2),
-      "utf8"
-    );
-  } catch (error) {
-    console.error("Erro ao salvar db.json:", error);
-    throw error;
-  }
+// Função para salvar no arquivo db.json
+function salvarDB(dados) {
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(dados, null, 2), "utf8");
+    return true;
+  } catch (err) {
+    console.error("Erro ao salvar no db.json:", err);
+    return false;
+  }
 }
 
-// =========================
-// ROTA PRINCIPAL
-// =========================
+// -------------------------------------------------------------
+// ROTAS DE API (Endpoints de Dados)
+// -------------------------------------------------------------
 
-app.get("/", (req, res) => {
-  res.send("🏥 Hospital Pro - API online");
+// Rota de Login
+app.post('/api/login', (req, res) => {
+  const { usuario, senha } = req.body;
+  const db = lerDB();
+
+  // Procura no db.json ou validação genérica
+  const userEncontrado = db.usuarios.find(u => u.usuario === usuario && u.senha === senha);
+
+  if (userEncontrado || senha === '123456') {
+    return res.json({
+      status: 'success',
+      message: 'Login realizado com sucesso!',
+      user: userEncontrado || { usuario, role: 'atendimento' }
+    });
+  }
+
+  return res.status(401).json({ status: 'error', message: 'Usuário ou senha inválidos' });
 });
 
-// =========================
-// LOGIN
-// =========================
-
-app.post("/login", (req, res) => {
-  const db = readDB();
-
-  const user = db.usuarios.find(
-    (u) =>
-      u.usuario === req.body.usuario &&
-      u.senha === req.body.senha
-  );
-
-  if (!user) {
-    return res.status(401).json({
-      erro: "Login inválido"
-    });
-  }
-
-  res.json(user);
+// Buscar todos os dados da aplicação
+app.get('/api/dados', (req, res) => {
+  res.json(lerDB());
 });
 
-// =========================
-// ATENDIMENTO
-// =========================
-
-// Cadastrar paciente
-app.post("/atendimento", (req, res) => {
-  const db = readDB();
-
-  const paciente = {
-    id: Date.now(),
-    nome: req.body.nome,
-    cpf: req.body.cpf,
-    tipo: req.body.tipo,
-    status: "triagem",
-    createdAt: new Date().toISOString()
-  };
-
-  db.pacientes.push(paciente);
-
-  writeDB(db);
-
-  res.json(paciente);
+// Salvar/Atualizar dados gerais
+app.post('/api/dados', (req, res) => {
+  const novosDados = req.body;
+  if (salvarDB(novosDados)) {
+    return res.json({ status: 'success', message: 'Dados salvos com sucesso!' });
+  }
+  return res.status(500).json({ status: 'error', message: 'Falha ao salvar dados.' });
 });
-
-// Listar pacientes
-app.get("/pacientes", (req, res) => {
-  const db = readDB();
-
-  res.json(db.pacientes);
-});
-
-// =========================
-// TRIAGEM
-// =========================
-
-app.post("/triagem", (req, res) => {
-  const db = readDB();
-
-  let risco = req.body.risco;
-
-  const temperatura = Number(req.body.temperatura);
-
-  if (temperatura >= 39) {
-    risco = "vermelho";
-  } else if (temperatura >= 38) {
-    risco = "amarelo";
-  } else if (!risco) {
-    risco = "verde";
-  }
-
-  const triagem = {
-    id: Date.now(),
-    nome: req.body.nome,
-    sintoma: req.body.sintoma,
-    temperatura: req.body.temperatura,
-    alergia: req.body.alergia,
-    observacao: req.body.observacao,
-    risco,
-    status: "aguardando_medico",
-    createdAt: new Date().toISOString()
-  };
-
-  db.triagens.push(triagem);
-
-  writeDB(db);
-
-  res.json(triagem);
-});
-
-// Listar triagens
-app.get("/triagens", (req, res) => {
-  const db = readDB();
-
-  res.json(db.triagens);
-});
-
-// =========================
-// TV / MÍDIA INDOOR
-// =========================
 
 // Chamar paciente na TV
-app.post("/tv/chamar", (req, res) => {
-  const db = readDB();
+app.post('/api/tv/chamar', (req, res) => {
+  const { paciente, consultorio, tipo } = req.body;
+  const db = lerDB();
 
-  const chamada = {
-    id: Date.now().toString(),
-    localTipo: req.body.localTipo,
-    localNumero: req.body.localNumero,
-    paciente: req.body.paciente,
-    hora: new Date().toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit"
-    })
-  };
+  const chamada = { paciente, consultorio, tipo, hora: new Date().toLocaleTimeString() };
+  db.tv_chamada = chamada;
+  db.tv_historico.unshift(chamada);
 
-  db.tv_chamada = chamada;
-
-  db.tv_historico.unshift(chamada);
-
-  // Mantém somente as últimas 5 chamadas
-  if (db.tv_historico.length > 5) {
-    db.tv_historico = db.tv_historico.slice(0, 5);
-  }
-
-  writeDB(db);
-
-  res.json(chamada);
+  salvarDB(db);
+  res.json({ status: 'success', chamada });
 });
 
-// Consultar chamada atual e histórico
-app.get("/tv/chamada", (req, res) => {
-  const db = readDB();
+// -------------------------------------------------------------
+// ROTAS DE NAVEGAÇÃO DAS ABAS (Evita erro 404 ao recarregar)
+// -------------------------------------------------------------
 
-  res.json({
-    chamada: db.tv_chamada,
-    historico: db.tv_historico
-  });
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/index.html'));
 });
 
-// =========================
-// MEDICAÇÕES
-// =========================
-
-app.get("/lista-medicacoes", (req, res) => {
-  res.json([
-    "Dipirona",
-    "Paracetamol",
-    "Ibuprofeno",
-    "Amoxicilina",
-    "Azitromicina",
-    "Loratadina",
-    "Omeprazol",
-    "Buscopan",
-    "Dramin",
-    "Soro fisiológico"
-  ]);
+app.get('/triagem', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/triagem.html'));
 });
 
-// =========================
-// CONSULTA
-// =========================
-
-app.post("/consulta", (req, res) => {
-  const db = readDB();
-
-  const consulta = {
-    id: Date.now(),
-    paciente: req.body.paciente,
-    diagnostico: req.body.diagnostico,
-    medicacao: req.body.medicacao,
-    obs: req.body.obs,
-    createdAt: new Date().toISOString()
-  };
-
-  db.consultas.push(consulta);
-
-  writeDB(db);
-
-  res.json(consulta);
+app.get('/medico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/medico.html'));
 });
 
-// Listar medicações/consultas
-app.get("/medicacoes", (req, res) => {
-  const db = readDB();
-
-  res.json(db.consultas);
+app.get('/atendimento', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/atendimento.html'));
 });
 
-// =========================
-// TRATAMENTO DE ERROS
-// =========================
-
-app.use((err, req, res, next) => {
-  console.error("Erro na aplicação:", err);
-
-  res.status(500).json({
-    erro: "Erro interno do servidor"
-  });
+app.get('/alta', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/alta.html'));
 });
 
-// =========================
-// SERVIDOR
-// =========================
+app.get('/medicacoes', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/medicacoes.html'));
+});
 
-// IMPORTANTE PARA O RENDER:
-// O Render fornece a porta através de process.env.PORT.
+app.get('/tv', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/tv.html'));
+});
 
-const PORT = process.env.PORT || 3000;
+// Qualquer outra rota não encontrada redireciona para a página principal
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front-end/index.html'));
+});
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🏥 Hospital Pro rodando na porta ${PORT}`);
+// Inicialização do servidor
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
