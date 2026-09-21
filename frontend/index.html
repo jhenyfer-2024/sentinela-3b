@@ -6,7 +6,6 @@
   <title>MedFlow Kids - Login</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -14,24 +13,19 @@
     body {
       margin: 0;
       min-height: 100vh;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       font-family: Arial, sans-serif;
-
       background-image:
         linear-gradient(
           rgba(80, 180, 230, 0.30),
           rgba(100, 210, 180, 0.30)
         ),
         url(pis.jpg);
-
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
       overflow: hidden;
     }
 
@@ -75,10 +69,7 @@
       background: rgba(255,255,255,0.96);
       border-radius: 30px;
       border: 5px solid #81d4fa;
-
-      box-shadow:
-        0 15px 40px rgba(0, 100, 160, 0.25);
-
+      box-shadow: 0 15px 40px rgba(0, 100, 160, 0.25);
       animation: entrada 0.8s ease;
       z-index: 2;
     }
@@ -97,16 +88,8 @@
       justify-content: center;
       align-items: center;
       border-radius: 35px;
-
-      background: linear-gradient(
-        135deg,
-        #4fc3f7,
-        #81d4fa
-      );
-
-      box-shadow:
-        0 8px 20px rgba(79,195,247,0.35);
-
+      background: linear-gradient(135deg, #4fc3f7, #81d4fa);
+      box-shadow: 0 8px 20px rgba(79,195,247,0.35);
       animation: pular 2s infinite;
     }
 
@@ -119,9 +102,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
-      box-shadow:
-        0 5px 12px rgba(0,0,0,0.12);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
     }
 
     .cruz::before {
@@ -191,9 +172,7 @@
       background: white;
       border-color: #4fc3f7;
       transform: scale(1.02);
-
-      box-shadow:
-        0 5px 15px rgba(79,195,247,0.18);
+      box-shadow: 0 5px 15px rgba(79,195,247,0.18);
     }
 
     .icone {
@@ -210,29 +189,18 @@
       margin-top: 5px;
       border: none;
       border-radius: 15px;
-
-      background: linear-gradient(
-        135deg,
-        #42a5f5,
-        #66bb6a
-      );
-
+      background: linear-gradient(135deg, #42a5f5, #66bb6a);
       color: white;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
-
-      box-shadow:
-        0 7px 15px rgba(66,165,245,0.25);
-
+      box-shadow: 0 7px 15px rgba(66,165,245,0.25);
       transition: 0.25s;
     }
 
     .btn:hover {
       transform: translateY(-3px) scale(1.02);
-
-      box-shadow:
-        0 10px 20px rgba(66,165,245,0.35);
+      box-shadow: 0 10px 20px rgba(66,165,245,0.35);
     }
 
     .btn:active {
@@ -251,7 +219,6 @@
         opacity: 0;
         transform: translateY(40px) scale(0.9);
       }
-
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -262,7 +229,6 @@
       0%, 100% {
         transform: translateY(0);
       }
-
       50% {
         transform: translateY(-7px);
       }
@@ -273,7 +239,6 @@
         opacity: 0;
         transform: translateX(-20px);
       }
-
       to {
         opacity: 1;
         transform: translateX(0);
@@ -284,7 +249,6 @@
       0%, 100% {
         transform: translateY(0);
       }
-
       50% {
         transform: translateY(-20px);
       }
@@ -296,7 +260,6 @@
         padding: 30px 25px;
       }
     }
-
   </style>
 
 </head>
@@ -310,17 +273,10 @@
   <div class="login-box">
 
     <div class="logo-area">
-
       <div class="logo">
-
         <div class="cruz"></div>
-
-        <div class="urso">
-          🧸
-        </div>
-
+        <div class="urso">🧸</div>
       </div>
-
     </div>
 
     <div class="nome">
@@ -332,32 +288,22 @@
     </div>
 
     <div class="campo">
-
-      <span class="icone">
-        👩‍⚕️
-      </span>
-
+      <span class="icone">👩‍⚕️</span>
       <input
         id="usuario"
         placeholder="Usuário"
         autocomplete="username"
       >
-
     </div>
 
     <div class="campo">
-
-      <span class="icone">
-        🔐
-      </span>
-
+      <span class="icone">🔐</span>
       <input
         id="senha"
         type="password"
         placeholder="Senha"
         autocomplete="current-password"
       >
-
     </div>
 
     <button class="btn" onclick="login()">
@@ -371,57 +317,44 @@
   </div>
 
   <script>
-
     function login() {
+      const usuarioInput = document.getElementById("usuario").value;
+      const senhaInput = document.getElementById("senha").value;
 
-      fetch("https://sentinela-3b-1.onrender.com/login", {
-
+      fetch("/api/login", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
-
-          usuario:
-            document.getElementById("usuario").value,
-
-          senha:
-            document.getElementById("senha").value
-
+          usuario: usuarioInput,
+          senha: senhaInput
         })
-
       })
-
-      .then(r => r.json())
-
+      .then(r => {
+        if (!r.ok) {
+          throw new Error("Usuário ou senha incorretos");
+        }
+        return r.json();
+      })
       .then(data => {
+        const papel = data.user ? data.user.role : data.tipo;
 
-        if (data.tipo === "triagem") {
-          location.href = "triagem.html";
+        if (papel === "triagem") {
+          location.href = "/triagem";
+        } else if (papel === "medico") {
+          location.href = "/medico";
+        } else if (papel === "atendimento") {
+          location.href = "/atendimento";
+        } else {
+          location.href = "/atendimento";
         }
-
-        if (data.tipo === "medico") {
-          location.href = "medico.html";
-        }
-
-        if (data.tipo === "atendimento") {
-          location.href = "atendimento.html";
-        }
-
       })
-
       .catch(error => {
-
         console.error(error);
-
-        alert("Erro ao conectar com o servidor.");
-
+        alert(error.message || "Erro ao conectar com o servidor.");
       });
-
     }
-
   </script>
 
 </body>
