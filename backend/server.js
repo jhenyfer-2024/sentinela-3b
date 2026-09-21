@@ -4,16 +4,18 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Configuração de Middlewares
+// =========================
+// CONFIGURAÇÕES
+// =========================
+
 app.use(express.json());
 app.use(cors());
 
-// Descobre a pasta raiz do projeto
+// Descobre o caminho raiz do projeto (/opt/render/project/src)
 const ROOT_DIR = path.resolve(__dirname, "..");
 
-// Função para localizar a pasta do front-end
+// Função para localizar a pasta do front-end com tolerância a maiúsculas/minúsculas
 function obterPastaFrontend() {
   try {
     const itens = fs.readdirSync(ROOT_DIR);
@@ -27,10 +29,14 @@ function obterPastaFrontend() {
 }
 
 const FRONTEND_DIR = obterPastaFrontend();
+
+// Servir o frontend (arquivos estáticos: CSS, JS, imagens)
 app.use(express.static(FRONTEND_DIR));
 
-// Banco de dados (localizado dentro da pasta backend)
-const DB_FILE = path.join(ROOT_DIR, "backend", "db.json");
+// Banco de dados (localizado na pasta backend ou api)
+const DB_FILE = fs.existsSync(path.join(ROOT_DIR, "backend", "db.json"))
+  ? path.join(ROOT_DIR, "backend", "db.json")
+  : path.join(__dirname, "db.json");
 
 // =========================
 // BANCO DE DADOS
@@ -39,11 +45,7 @@ const DB_FILE = path.join(ROOT_DIR, "backend", "db.json");
 function readDB() {
   if (!fs.existsSync(DB_FILE)) {
     return {
-      usuarios: [
-        { usuario: "triagem", senha: "123", tipo: "triagem" },
-        { usuario: "medico", senha: "123", tipo: "medico" },
-        { usuario: "atendimento", senha: "123", tipo: "atendimento" }
-      ],
+      usuarios: [],
       pacientes: [],
       triagens: [],
       consultas: [],
@@ -55,13 +57,7 @@ function readDB() {
   try {
     const db = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
 
-    if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
-      db.usuarios = [
-        { usuario: "triagem", senha: "123", tipo: "triagem" },
-        { usuario: "medico", senha: "123", tipo: "medico" },
-        { usuario: "atendimento", senha: "123", tipo: "atendimento" }
-      ];
-    }
+    if (!Array.isArray(db.usuarios)) db.usuarios = [];
     if (!Array.isArray(db.pacientes)) db.pacientes = [];
     if (!Array.isArray(db.triagens)) db.triagens = [];
     if (!Array.isArray(db.consultas)) db.consultas = [];
@@ -72,11 +68,7 @@ function readDB() {
   } catch (error) {
     console.error("Erro ao ler db.json:", error);
     return {
-      usuarios: [
-        { usuario: "triagem", senha: "123", tipo: "triagem" },
-        { usuario: "medico", senha: "123", tipo: "medico" },
-        { usuario: "atendimento", senha: "123", tipo: "atendimento" }
-      ],
+      usuarios: [],
       pacientes: [],
       triagens: [],
       consultas: [],
@@ -94,7 +86,7 @@ function writeDB(data) {
   }
 }
 
-// Função para enviar os arquivos HTML das abas
+// Auxiliar para enviar arquivos HTML das páginas sem erro
 function enviarHtml(res, nomeArquivo) {
   const caminhoCompleto = path.join(FRONTEND_DIR, nomeArquivo);
   if (fs.existsSync(caminhoCompleto)) {
@@ -104,53 +96,53 @@ function enviarHtml(res, nomeArquivo) {
 }
 
 // =========================
-// LOGIN & AUTENTICAÇÃO
+// LOGIN (LIBERADO)
 // =========================
 
 app.post("/login", (req, res) => {
-  const db = readDB();
-  const { usuario, senha } = req.body;
+  const { usuario } = req.body;
 
-  let user = db.usuarios.find(
-    (u) => u.usuario === usuario && u.senha === senha
-  );
-
-  // Permite login com senha padrão caso o usuário não esteja cadastrado no json
-  if (!user && (senha === "123" || senha === "123456")) {
-    user = {
-      usuario,
-      tipo: usuario === "medico" ? "medico" : usuario === "triagem" ? "triagem" : "atendimento"
-    };
+  let tipoUsuario = "atendimento"; 
+  if (usuario && usuario.toLowerCase().includes("triagem")) {
+    tipoUsuario = "triagem";
+  } else if (usuario && usuario.toLowerCase().includes("medico")) {
+    tipoUsuario = "medico";
   }
 
-  if (!user) {
-    return res.status(401).json({ erro: "Usuário ou senha incorretos" });
-  }
-
-  res.json(user);
+  return res.json({
+    status: "success",
+    usuario: usuario,
+    tipo: tipoUsuario,
+    role: tipoUsuario,
+    user: {
+      usuario: usuario,
+      tipo: tipoUsuario,
+      role: tipoUsuario
+    }
+  });
 });
 
-// Suporte para a rota alternativa de API
 app.post("/api/login", (req, res) => {
-  const db = readDB();
-  const { usuario, senha } = req.body;
+  const { usuario } = req.body;
 
-  let user = db.usuarios.find(
-    (u) => u.usuario === usuario && u.senha === senha
-  );
-
-  if (!user && (senha === "123" || senha === "123456")) {
-    user = {
-      usuario,
-      tipo: usuario === "medico" ? "medico" : usuario === "triagem" ? "triagem" : "atendimento"
-    };
+  let tipoUsuario = "atendimento"; 
+  if (usuario && usuario.toLowerCase().includes("triagem")) {
+    tipoUsuario = "triagem";
+  } else if (usuario && usuario.toLowerCase().includes("medico")) {
+    tipoUsuario = "medico";
   }
 
-  if (!user) {
-    return res.status(401).json({ status: "error", message: "Usuário ou senha incorretos" });
-  }
-
-  res.json({ status: "success", user, tipo: user.tipo });
+  return res.json({
+    status: "success",
+    usuario: usuario,
+    tipo: tipoUsuario,
+    role: tipoUsuario,
+    user: {
+      usuario: usuario,
+      tipo: tipoUsuario,
+      role: tipoUsuario
+    }
+  });
 });
 
 // =========================
@@ -287,7 +279,7 @@ app.get("/medicacoes", (req, res) => {
 });
 
 // =========================
-// NAVEGAÇÃO DAS ABAS (Evita Erro 404)
+// NAVEGAÇÃO DAS ABAS (HTML)
 // =========================
 
 app.get("/", (req, res) => enviarHtml(res, "index.html"));
@@ -298,12 +290,19 @@ app.get("/alta", (req, res) => enviarHtml(res, "alta.html"));
 app.get("/medicacoes", (req, res) => enviarHtml(res, "medicacoes.html"));
 app.get("/tv", (req, res) => enviarHtml(res, "tv.html"));
 
-// Rota curinga para redirecionamento no Express 5
+// Rota coringa compatível com Express 5
 app.get("/*splat", (req, res) => enviarHtml(res, "index.html"));
 
 // =========================
-// SERVIDOR
+// TRATAMENTO DE ERROS E SERVIDOR
 // =========================
+
+app.use((err, req, res, next) => {
+  console.error("Erro na aplicação:", err);
+  res.status(500).json({ erro: "Erro interno do servidor" });
+});
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🏥 Hospital Pro rodando na porta ${PORT}`);
