@@ -22,7 +22,7 @@ const DB_FILE = path.join(ROOT_DIR, "backend", "db.json");
 // Função auxiliar para enviar arquivos HTML com validação
 function enviarHtml(res, nomeArquivo) {
   const caminhoCompleto = path.join(ROOT_DIR, "front-end", nomeArquivo);
-  
+
   if (fs.existsSync(caminhoCompleto)) {
     return res.sendFile(caminhoCompleto);
   } else {
@@ -63,8 +63,8 @@ app.get('/alta', (req, res) => enviarHtml(res, 'alta.html'));
 app.get('/medicacoes', (req, res) => enviarHtml(res, 'medicacoes.html'));
 app.get('/tv', (req, res) => enviarHtml(res, 'tv.html'));
 
-// Rota coringa para qualquer outra página
-app.get('*', (req, res) => enviarHtml(res, 'index.html'));
+// Rota coringa atualizada para o Express 5 (Sintaxe /*splat)
+app.get('/*splat', (req, res) => enviarHtml(res, 'index.html'));
 
 // Inicialização do servidor
 app.listen(PORT, () => {
