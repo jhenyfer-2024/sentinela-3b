@@ -12,8 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Servir o frontend
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Servir o frontend (Ajustado para 'front-end' com hífen conforme sua estrutura)
+app.use(express.static(path.join(__dirname, "../front-end")));
 
 // Banco de dados
 const DB_FILE = path.join(__dirname, "db.json");
@@ -39,7 +39,6 @@ function readDB() {
       fs.readFileSync(DB_FILE, "utf8")
     );
 
-    // Garante que as propriedades existam
     if (!Array.isArray(db.usuarios)) db.usuarios = [];
     if (!Array.isArray(db.pacientes)) db.pacientes = [];
     if (!Array.isArray(db.triagens)) db.triagens = [];
@@ -82,11 +81,11 @@ function writeDB(data) {
 }
 
 // =========================
-// ROTA PRINCIPAL
+// ROTA PRINCIPAL / SERVIR FRONTEND
 // =========================
 
 app.get("/", (req, res) => {
-  res.send("🏥 Hospital Pro - API online");
+  res.sendFile(path.join(__dirname, "../front-end/index.html"));
 });
 
 // =========================
@@ -115,7 +114,6 @@ app.post("/login", (req, res) => {
 // ATENDIMENTO
 // =========================
 
-// Cadastrar paciente
 app.post("/atendimento", (req, res) => {
   const db = readDB();
 
@@ -129,16 +127,13 @@ app.post("/atendimento", (req, res) => {
   };
 
   db.pacientes.push(paciente);
-
   writeDB(db);
 
   res.json(paciente);
 });
 
-// Listar pacientes
 app.get("/pacientes", (req, res) => {
   const db = readDB();
-
   res.json(db.pacientes);
 });
 
@@ -150,7 +145,6 @@ app.post("/triagem", (req, res) => {
   const db = readDB();
 
   let risco = req.body.risco;
-
   const temperatura = Number(req.body.temperatura);
 
   if (temperatura >= 39) {
@@ -174,16 +168,13 @@ app.post("/triagem", (req, res) => {
   };
 
   db.triagens.push(triagem);
-
   writeDB(db);
 
   res.json(triagem);
 });
 
-// Listar triagens
 app.get("/triagens", (req, res) => {
   const db = readDB();
-
   res.json(db.triagens);
 });
 
@@ -191,7 +182,6 @@ app.get("/triagens", (req, res) => {
 // TV / MÍDIA INDOOR
 // =========================
 
-// Chamar paciente na TV
 app.post("/tv/chamar", (req, res) => {
   const db = readDB();
 
@@ -207,20 +197,16 @@ app.post("/tv/chamar", (req, res) => {
   };
 
   db.tv_chamada = chamada;
-
   db.tv_historico.unshift(chamada);
 
-  // Mantém somente as últimas 5 chamadas
   if (db.tv_historico.length > 5) {
     db.tv_historico = db.tv_historico.slice(0, 5);
   }
 
   writeDB(db);
-
   res.json(chamada);
 });
 
-// Consultar chamada atual e histórico
 app.get("/tv/chamada", (req, res) => {
   const db = readDB();
 
@@ -266,16 +252,13 @@ app.post("/consulta", (req, res) => {
   };
 
   db.consultas.push(consulta);
-
   writeDB(db);
 
   res.json(consulta);
 });
 
-// Listar medicações/consultas
 app.get("/medicacoes", (req, res) => {
   const db = readDB();
-
   res.json(db.consultas);
 });
 
@@ -294,9 +277,6 @@ app.use((err, req, res, next) => {
 // =========================
 // SERVIDOR
 // =========================
-
-// IMPORTANTE PARA O RENDER:
-// O Render fornece a porta através de process.env.PORT.
 
 const PORT = process.env.PORT || 3000;
 
