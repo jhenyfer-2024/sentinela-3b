@@ -11,3 +11,23 @@
     "express": "^5.2.1"
   }
 }
+
+{
+  "name": "medflow-kids",
+  "version": "1.0.0",
+  "description": "Triagem infantil com apoio de IA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "openai": "^5.0.0"
+  }
+}
