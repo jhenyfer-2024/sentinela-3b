@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MedFlow Kids - Triagem</title>
-
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -34,7 +33,7 @@
       background: white;
       border: 2px solid #b3e5fc;
       border-radius: 8px;
-      box-shadow: 0 5px 18px rgba(33,150,243,0.10);
+      box-shadow: 0 5px 18px rgba(33,150,243,.10);
     }
 
     .titulo {
@@ -52,7 +51,6 @@
       background: #4fc3f7;
       border-radius: 8px;
       font-size: 31px;
-      box-shadow: 0 5px 12px rgba(79,195,247,0.25);
     }
 
     .titulo h2 {
@@ -67,21 +65,20 @@
       font-size: 13px;
     }
 
-    .btn-abrir-tv {
+    .btn-abrir-tv,
+    .btn-tv {
       background: #26a69a;
       color: white;
       border: none;
       border-radius: 6px;
       padding: 11px 16px;
-      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
     }
 
-    .btn-abrir-tv:hover {
+    .btn-abrir-tv:hover,
+    .btn-tv:hover {
       background: #168f84;
-      transform: translateY(-2px);
     }
 
     .pacientes-fila {
@@ -90,13 +87,14 @@
       margin-bottom: 18px;
       border: 2px solid #b3e5fc;
       border-radius: 8px;
-      box-shadow: 0 5px 18px rgba(33,150,243,0.08);
+      box-shadow: 0 5px 18px rgba(33,150,243,.08);
     }
 
     .fila-titulo {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
       margin-bottom: 16px;
     }
 
@@ -119,18 +117,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       padding: 13px 15px;
       margin-bottom: 8px;
       background: #f8fdff;
       border: 1px solid #cceaf7;
       border-left: 5px solid #4fc3f7;
       border-radius: 6px;
-      transition: 0.2s;
-    }
-
-    .fila-item:hover {
-      background: #eefaff;
-      transform: translateX(3px);
     }
 
     .paciente-info {
@@ -162,22 +155,6 @@
       font-size: 12px;
     }
 
-    .btn-tv {
-      background: #26a69a;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 9px 13px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-
-    .btn-tv:hover {
-      background: #168f84;
-    }
-
     .btn-atualizar {
       margin-top: 6px;
       background: #90caf9;
@@ -186,13 +163,7 @@
       border-radius: 5px;
       padding: 8px 12px;
       cursor: pointer;
-      font-size: 12px;
       font-weight: bold;
-    }
-
-    .btn-atualizar:hover {
-      background: #64b5f6;
-      color: white;
     }
 
     .triagem-box {
@@ -200,7 +171,7 @@
       padding: 22px;
       border: 2px solid #c8e6c9;
       border-radius: 8px;
-      box-shadow: 0 5px 18px rgba(76,175,80,0.08);
+      box-shadow: 0 5px 18px rgba(76,175,80,.08);
     }
 
     .triagem-titulo {
@@ -234,7 +205,6 @@
       color: #37474f;
       font-size: 14px;
       outline: none;
-      transition: 0.2s;
     }
 
     .campo input:focus,
@@ -242,7 +212,6 @@
     .campo textarea:focus {
       background: white;
       border-color: #4fc3f7;
-      box-shadow: 0 3px 10px rgba(33,150,243,0.10);
     }
 
     .campo textarea {
@@ -254,6 +223,46 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 15px;
+    }
+
+    /* BOTÃO DE ANÁLISE COM IA */
+
+    .btn-ia-risco {
+      width: 100%;
+      margin: 15px 0;
+      padding: 14px;
+      background: #7e57c2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn-ia-risco:hover {
+      background: #673ab7;
+      transform: translateY(-2px);
+    }
+
+    .btn-ia-risco:disabled {
+      opacity: .7;
+      cursor: wait;
+      transform: none;
+    }
+
+    #analise-ia {
+      display: none;
+      margin: 15px 0;
+      padding: 16px;
+      background: #f7f3ff;
+      border: 1px solid #d1c4e9;
+      border-radius: 10px;
+      color: #4527a0;
+      line-height: 1.6;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
     }
 
     #resultado {
@@ -297,7 +306,7 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
+      transition: .2s;
     }
 
     .btn-salvar:hover {
@@ -305,43 +314,14 @@
       transform: translateY(-2px);
     }
 
-    /* BOTÃO DE IA */
-
-    .btn-ia-risco {
-      width: 100%;
-      margin: 15px 0;
-      padding: 14px;
-      background: #7e57c2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn-ia-risco:hover {
-      background: #673ab7;
-      transform: translateY(-2px);
-    }
-
-    .btn-ia-risco:disabled {
-      opacity: 0.7;
-      cursor: wait;
-      transform: none;
-    }
-
-    #analise-ia {
-      display: none;
-      margin: 15px 0;
-      padding: 16px;
-      background: #f7f3ff;
-      border: 1px solid #d1c4e9;
-      border-radius: 10px;
-      color: #4527a0;
-      line-height: 1.6;
-      white-space: pre-line;
+    .aviso-seguranca {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+      background: #fff8e1;
+      color: #795548;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     @media (max-width: 650px) {
@@ -351,35 +331,39 @@
         gap: 15px;
       }
 
-      .btn-abrir-tv {
+      .btn-abrir-tv,
+      .btn-tv {
         width: 100%;
       }
 
       .fila-titulo {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
       }
 
       .fila-item {
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
-      }
-
-      .btn-tv {
-        width: 100%;
       }
 
       .campos-duplos {
         grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin: 12px auto;
+        padding: 0 10px;
+      }
+
+      .triagem-box,
+      .pacientes-fila {
+        padding: 15px;
       }
     }
   </style>
 </head>
 
 <body>
-
 <div class="container">
 
   <!-- CABEÇALHO -->
@@ -387,7 +371,6 @@
   <div class="cabecalho">
     <div class="titulo">
       <div class="logo">🧸</div>
-
       <div>
         <h2>🩺 MedFlow Kids</h2>
         <p>Triagem e acolhimento infantil</p>
@@ -395,13 +378,14 @@
     </div>
 
     <button
+      type="button"
       class="btn-abrir-tv"
-      onclick="window.open('tv.html','_blank')">
+      onclick="window.open('tv.html', '_blank')">
       📺 Abrir Tela da TV
     </button>
   </div>
 
-  <!-- FILA -->
+  <!-- FILA DE PACIENTES -->
 
   <div class="pacientes-fila">
     <div class="fila-titulo">
@@ -416,28 +400,29 @@
     </div>
 
     <button
+      type="button"
       class="btn-atualizar"
       onclick="carregarPacientes()">
       🔄 Atualizar lista
     </button>
   </div>
 
-  <!-- FORMULÁRIO -->
+  <!-- FORMULÁRIO DE TRIAGEM -->
 
   <div class="triagem-box">
-
     <h3 class="triagem-titulo">
       🩺 Formulário de Triagem Infantil
     </h3>
 
     <div class="campo">
-      <label>👤 Nome do paciente</label>
-      <input id="nome" placeholder="Digite o nome da criança">
+      <label for="nome">👤 Nome do paciente</label>
+      <input
+        id="nome"
+        placeholder="Digite o nome da criança">
     </div>
 
     <div class="campo">
-      <label>🩺 Sintoma principal</label>
-
+      <label for="sintoma">🩺 Sintoma principal</label>
       <select id="sintoma">
         <option value="">Selecione o sintoma</option>
         <option value="dor_leve">🤕 Dor leve</option>
@@ -458,28 +443,32 @@
 
     <div class="campos-duplos">
       <div class="campo">
-        <label>🌡️ Temperatura</label>
+        <label for="temp">🌡️ Temperatura (°C)</label>
         <input
           id="temp"
           type="number"
+          min="30"
+          max="45"
           step="0.1"
-          placeholder="Ex: 37.5">
+          placeholder="Ex.: 37.5">
       </div>
 
       <div class="campo">
-        <label>⚠️ Alergias</label>
-        <input id="alergia" placeholder="Digite as alergias">
+        <label for="alergia">⚠️ Alergias</label>
+        <input
+          id="alergia"
+          placeholder="Digite as alergias">
       </div>
     </div>
 
     <div class="campo">
-      <label>📝 Observações</label>
+      <label for="observacao">📝 Observações</label>
       <textarea
         id="observacao"
         placeholder="Informações importantes sobre a criança..."></textarea>
     </div>
 
-    <!-- BOTÃO DE IA NO FORMATO QUE VOCÊ PEDIU -->
+    <!-- BOTÃO DE IA DENTRO DA TRIAGEM -->
 
     <button
       type="button"
@@ -489,131 +478,159 @@
       🤖 Analisar paciente com IA
     </button>
 
-    <div id="analise-ia" style="
-      display:none;
-      margin:15px 0;
-      padding:16px;
-      background:#f7f3ff;
-      border:1px solid #d1c4e9;
-      border-radius:10px;
-      color:#4527a0;
-      line-height:1.6;
-      white-space:pre-line;">
+    <!-- RESULTADO DA ANÁLISE -->
+
+    <div id="analise-ia" role="status" aria-live="polite"></div>
+
+    <div class="aviso-seguranca">
+      ⚠️ A análise da IA é apenas um apoio preliminar. Não substitui
+      avaliação clínica, protocolos de triagem pediátrica ou atendimento
+      de emergência. Sinais graves exigem avaliação imediata.
     </div>
 
     <div id="resultado"></div>
 
     <button
+      type="button"
       class="btn-salvar"
       onclick="salvar()">
       💚 Salvar Triagem
     </button>
-
   </div>
 </div>
 
 <script>
+/* FUNÇÃO AUXILIAR: LER RESPOSTAS DO SERVIDOR */
+
+async function lerResposta(resposta) {
+  const texto = await resposta.text();
+
+  let dados;
+
+  try {
+    dados = JSON.parse(texto);
+  } catch {
+    throw new Error(
+      "O servidor não retornou JSON válido. Verifique se a rota existe, " +
+      "se o endereço está correto e se o servidor está funcionando."
+    );
+  }
+
+  if (!resposta.ok) {
+    throw new Error(
+      dados.erro || "O servidor apresentou um erro."
+    );
+  }
+
+  return dados;
+}
 
 /* CARREGAR PACIENTES */
 
-function carregarPacientes() {
-  fetch("/pacientes")
-    .then(r => r.json())
-    .then(pacientes => {
-      const div = document.getElementById("fila-pacientes");
+async function carregarPacientes() {
+  const div = document.getElementById("fila-pacientes");
 
-      const fila = pacientes.filter(
-        p => p.status === "triagem"
-      );
+  try {
+    const resposta = await fetch("/pacientes");
+    const pacientes = await lerResposta(resposta);
 
-      if (fila.length === 0) {
-        div.innerHTML = `
-          <div style="
-            text-align:center;
-            padding:25px;
-            color:#90a4ae;
-          ">
-            🧸 Nenhum pequeno paciente aguardando.
-            <br>
-            <small>A fila está tranquila! 💙</small>
-          </div>
-        `;
-        return;
-      }
+    if (!Array.isArray(pacientes)) {
+      throw new Error("O servidor não retornou uma lista válida.");
+    }
 
-      div.innerHTML = "";
+    const fila = pacientes.filter(
+      p => p.status === "triagem"
+    );
 
-      fila.forEach(p => {
-        const item = document.createElement("div");
-        item.className = "fila-item";
+    div.replaceChildren();
 
-        const info = document.createElement("div");
-        info.className = "paciente-info";
-
-        const icone = document.createElement("div");
-        icone.className = "paciente-icone";
-        icone.textContent = "🧸";
-
-        const detalhes = document.createElement("div");
-        const nome = document.createElement("strong");
-        nome.textContent = p.nome || "Paciente";
-
-        const pequeno = document.createElement("small");
-        pequeno.textContent =
-          "CPF: " + (p.cpf || "—") +
-          " | Tipo: " + (p.tipo || "—");
-
-        detalhes.appendChild(nome);
-        detalhes.appendChild(pequeno);
-        info.appendChild(icone);
-        info.appendChild(detalhes);
-
-        const botao = document.createElement("button");
-        botao.className = "btn-tv";
-        botao.textContent = "📺 Chamar na TV";
-        botao.addEventListener("click", () => chamarNaTV(p.nome));
-
-        item.appendChild(info);
-        item.appendChild(botao);
-        div.appendChild(item);
-      });
-    })
-    .catch(() => {
-      document.getElementById("fila-pacientes").innerHTML = `
-        <p style="color:#e53935;text-align:center;">
-          ❌ Erro ao carregar pacientes.
-        </p>
+    if (fila.length === 0) {
+      div.innerHTML = `
+        <div style="text-align:center;padding:25px;color:#90a4ae;">
+          🧸 Nenhum pequeno paciente aguardando.
+          <br>
+          <small>A fila está tranquila! 💙</small>
+        </div>
       `;
+      return;
+    }
+
+    fila.forEach(p => {
+      const item = document.createElement("div");
+      item.className = "fila-item";
+
+      const info = document.createElement("div");
+      info.className = "paciente-info";
+
+      const icone = document.createElement("div");
+      icone.className = "paciente-icone";
+      icone.textContent = "🧸";
+
+      const detalhes = document.createElement("div");
+
+      const nome = document.createElement("strong");
+      nome.textContent = p.nome || "Paciente";
+
+      const pequeno = document.createElement("small");
+      pequeno.textContent =
+        "CPF: " + (p.cpf || "—") +
+        " | Tipo: " + (p.tipo || "—");
+
+      detalhes.append(nome, pequeno);
+      info.append(icone, detalhes);
+
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = "btn-tv";
+      botao.textContent = "📺 Chamar na TV";
+
+      botao.addEventListener("click", () => {
+        chamarNaTV(p.nome);
+      });
+
+      item.append(info, botao);
+      div.appendChild(item);
     });
+
+  } catch (erro) {
+    div.textContent = "";
+
+    const mensagem = document.createElement("p");
+    mensagem.style.color = "#e53935";
+    mensagem.style.textAlign = "center";
+    mensagem.textContent = "❌ " + erro.message;
+
+    div.appendChild(mensagem);
+  }
 }
 
 /* CHAMAR NA TV */
 
-function chamarNaTV(nome) {
-  fetch("/tv/chamar", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      localTipo: "GUICHÊ",
-      localNumero: "01",
-      paciente: nome
-    })
-  })
-  .then(r => {
-    if (!r.ok) throw new Error("Não foi possível chamar o paciente.");
-    return r.json();
-  })
-  .then(() => {
+async function chamarNaTV(nome) {
+  try {
+    const resposta = await fetch("/tv/chamar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        localTipo: "GUICHÊ",
+        localNumero: "01",
+        paciente: nome
+      })
+    });
+
+    await lerResposta(resposta);
+
     alert("✅ " + nome + " foi chamado na TV para o Guichê 01!");
-  })
-  .catch(erro => {
+
+  } catch (erro) {
     alert("❌ " + erro.message);
-  });
+  }
 }
 
-/* CLASSIFICAR RISCO EXISTENTE */
+/* CLASSIFICAÇÃO LOCAL EXISTENTE
+   Esta regra simplificada NÃO substitui um protocolo clínico. */
 
 function classificarRisco(sintoma, temperatura) {
   const vermelhos = [
@@ -631,9 +648,9 @@ function classificarRisco(sintoma, temperatura) {
     "falta_ar_moderada"
   ];
 
-  if (temperatura >= 39) return "vermelho";
-
   if (vermelhos.includes(sintoma)) return "vermelho";
+
+  if (temperatura >= 39) return "vermelho";
 
   if (amarelos.includes(sintoma)) return "amarelo";
 
@@ -645,8 +662,8 @@ function classificarRisco(sintoma, temperatura) {
 async function gerarSugestaoRisco() {
   const sintoma = document.getElementById("sintoma").value;
   const temperaturaTexto = document.getElementById("temp").value;
-  const alergia = document.getElementById("alergia").value;
-  const observacao = document.getElementById("observacao").value;
+  const alergia = document.getElementById("alergia").value.trim();
+  const observacao = document.getElementById("observacao").value.trim();
 
   const painel = document.getElementById("analise-ia");
   const botao = document.getElementById("btn-ia-risco");
@@ -654,6 +671,19 @@ async function gerarSugestaoRisco() {
   if (!sintoma) {
     alert("🩺 Selecione o sintoma antes de solicitar a análise.");
     return;
+  }
+
+  let temperatura = null;
+
+  if (temperaturaTexto !== "") {
+    temperatura = Number(temperaturaTexto);
+
+    if (!Number.isFinite(temperatura) ||
+        temperatura < 30 ||
+        temperatura > 45) {
+      alert("Digite uma temperatura válida.");
+      return;
+    }
   }
 
   painel.style.display = "block";
@@ -670,36 +700,30 @@ async function gerarSugestaoRisco() {
       },
       body: JSON.stringify({
         sintoma,
-        temperatura: temperaturaTexto === ""
-          ? null
-          : Number(temperaturaTexto),
+        temperatura,
         alergia,
         observacao
       })
     });
 
-    const dados = await resposta.json();
-
-    if (!resposta.ok) {
-      throw new Error(
-        dados.erro || "Não foi possível analisar o paciente."
-      );
-    }
+    const dados = await lerResposta(resposta);
 
     const classificacao = String(
-      dados.classificacao || "indeterminado"
+      dados.classificacao || "indeterminada"
     ).toUpperCase();
 
     const sinais = Array.isArray(dados.sinais_atencao) &&
-      dados.sinais_atencao.length
-      ? dados.sinais_atencao.map(sinal => "• " + sinal).join("\n")
+      dados.sinais_atencao.length > 0
+      ? dados.sinais_atencao
+          .map(sinal => "• " + String(sinal))
+          .join("\n")
       : "Nenhum sinal de atenção foi informado pela análise.";
 
     painel.textContent =
-      "🤖 SUGESTÃO PRELIMINAR DA IA\n" +
+      "🤖 SUGESTÃO PRELIMINAR DA IA\n\n" +
       "Classificação sugerida: " + classificacao + "\n\n" +
       "Possível explicação: " +
-      (dados.explicacao || "Não foi possível gerar uma explicação.") +
+      (dados.explicacao || "Sem explicação disponível.") +
       "\n\nSinais de atenção:\n" + sinais +
       "\n\nAviso: " +
       (dados.aviso ||
@@ -707,8 +731,10 @@ async function gerarSugestaoRisco() {
 
   } catch (erro) {
     painel.textContent =
-      "❌ " + erro.message +
-      "\n\nVerifique se a rota /api/analisar-risco está configurada no servidor e se o serviço de IA está disponível.";
+      "❌ Não foi possível concluir a análise.\n\n" +
+      erro.message +
+      "\n\nConfira se a rota /api/analisar-risco está configurada " +
+      "no servidor e se o serviço de IA está disponível.";
   } finally {
     botao.disabled = false;
     botao.textContent = "🤖 Analisar paciente com IA";
@@ -717,15 +743,12 @@ async function gerarSugestaoRisco() {
 
 /* SALVAR TRIAGEM */
 
-function salvar() {
-  const nome = document.getElementById("nome").value;
+async function salvar() {
+  const nome = document.getElementById("nome").value.trim();
   const sintoma = document.getElementById("sintoma").value;
   const temperaturaTexto = document.getElementById("temp").value;
-  const temperatura = temperaturaTexto === ""
-    ? null
-    : Number(temperaturaTexto);
-  const alergia = document.getElementById("alergia").value;
-  const observacao = document.getElementById("observacao").value;
+  const alergia = document.getElementById("alergia").value.trim();
+  const observacao = document.getElementById("observacao").value.trim();
 
   if (!nome) {
     alert("🧸 Digite o nome do paciente.");
@@ -737,34 +760,46 @@ function salvar() {
     return;
   }
 
+  let temperatura = null;
+
+  if (temperaturaTexto !== "") {
+    temperatura = Number(temperaturaTexto);
+
+    if (!Number.isFinite(temperatura) ||
+        temperatura < 30 ||
+        temperatura > 45) {
+      alert("Digite uma temperatura válida.");
+      return;
+    }
+  }
+
   const risco = classificarRisco(
     sintoma,
     temperatura === null ? 0 : temperatura
   );
 
-  fetch("/triagem", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nome,
-      sintoma,
-      temperatura,
-      alergia,
-      observacao,
-      risco
-    })
-  })
-  .then(r => {
-    if (!r.ok) throw new Error("Não foi possível salvar a triagem.");
-    return r.json();
-  })
-  .then(() => {
-    const resultado = document.getElementById("resultado");
+  try {
+    const resposta = await fetch("/triagem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nome,
+        sintoma,
+        temperatura,
+        alergia,
+        observacao,
+        risco
+      })
+    });
 
+    await lerResposta(resposta);
+
+    const resultado = document.getElementById("resultado");
     resultado.className = risco;
-    resultado.textContent = "Classificação: " + risco.toUpperCase();
+    resultado.textContent =
+      "Classificação preliminar: " + risco.toUpperCase();
 
     alert("✅ Triagem salva com sucesso!");
 
@@ -778,18 +813,16 @@ function salvar() {
     document.getElementById("analise-ia").textContent = "";
 
     carregarPacientes();
-  })
-  .catch(erro => {
-    alert("❌ " + erro.message);
-  });
+
+  } catch (erro) {
+    alert("❌ Não foi possível salvar: " + erro.message);
+  }
 }
 
 /* INICIALIZAÇÃO */
 
 carregarPacientes();
-
 setInterval(carregarPacientes, 10000);
-
 </script>
 
 </body>
