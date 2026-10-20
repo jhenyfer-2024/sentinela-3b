@@ -118,5 +118,554 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding:
-        
+      padding: 13px 15px;
+      margin-bottom: 8px;
+      background: #f8fdff;
+      border: 1px solid #cceaf7;
+      border-left: 5px solid #4fc3f7;
+      border-radius: 6px;
+    }
+
+    .paciente-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .paciente-icone {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e1f5fe;
+      border-radius: 6px;
+      font-size: 22px;
+    }
+
+    .fila-item strong {
+      display: block;
+      color: #0277bd;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .fila-item small {
+      color: #78909c;
+      font-size: 12px;
+    }
+
+    .btn-atualizar {
+      margin-top: 6px;
+      background: #90caf9;
+      color: #075985;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .triagem-box {
+      background: white;
+      padding: 22px;
+      border: 2px solid #c8e6c9;
+      border-radius: 8px;
+      box-shadow: 0 5px 18px rgba(76,175,80,.08);
+    }
+
+    .triagem-titulo {
+      margin: 0 0 20px;
+      color: #43a047;
+      font-size: 20px;
+      border-bottom: 2px solid #e8f5e9;
+      padding-bottom: 12px;
+    }
+
+    .campo {
+      margin-bottom: 14px;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 6px;
+      color: #546e7a;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .campo input,
+    .campo select,
+    .campo textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e1f5fe;
+      border-radius: 6px;
+      background: #fafdff;
+      color: #37474f;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .campo input:focus,
+    .campo select:focus,
+    .campo textarea:focus {
+      background: white;
+      border-color: #4fc3f7;
+    }
+
+    .campo textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .campos-duplos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn-ia-risco {
+      width: 100%;
+      margin: 15px 0;
+      padding: 14px;
+      background: #7e57c2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn-ia-risco:hover {
+      background: #673ab7;
+      transform: translateY(-2px);
+    }
+
+    .btn-ia-risco:disabled {
+      opacity: .7;
+      cursor: wait;
+      transform: none;
+    }
+
+    #analise-ia {
+      display: none;
+      margin: 15px 0;
+      padding: 18px;
+      border: 2px solid #d1c4e9;
+      border-radius: 10px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    #resultado {
+      padding: 12px;
+      margin: 15px 0;
+      text-align: center;
+      border-radius: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    #resultado:empty {
+      display: none;
+    }
+
+    #resultado.verde {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 2px solid #c8e6c9;
+    }
+
+    #resultado.amarelo {
+      background: #fff8e1;
+      color: #f57f17;
+      border: 2px solid #ffe082;
+    }
+
+    #resultado.vermelho {
+      background: #ffebee;
+      color: #c62828;
+      border: 2px solid #ffcdd2;
+    }
+
+    .btn-salvar {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      background: #43a047;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn-salvar:hover {
+      background: #388e3c;
+      transform: translateY(-2px);
+    }
+
+    .aviso-seguranca {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+      background: #fff8e1;
+      color: #795548;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 650px) {
+      .cabecalho {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+
+      .btn-abrir-tv,
+      .btn-tv {
+        width: 100%;
+      }
+
+      .fila-titulo {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .fila-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .campos-duplos {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin: 12px auto;
+        padding: 0 10px;
+      }
+
+      .triagem-box,
+      .pacientes-fila {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="cabecalho">
+    <div class="titulo">
+      <div class="logo">🧸</div>
+      <div>
+        <h2>🩺 MedFlow Kids</h2>
+        <p>Triagem e acolhimento infantil</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn-abrir-tv"
+      onclick="window.open('tv.html', '_blank')">
+      📺 Abrir Tela da TV
+    </button>
+  </div>
+
+  <!-- FILA DE PACIENTES -->
+  <div class="pacientes-fila">
+    <div class="fila-titulo">
+      <h3>🧸 Pacientes aguardando triagem</h3>
+      <span>📺 Chamar no guichê</span>
+    </div>
+
+    <div id="fila-pacientes">
+      <p style="color:#78909c;text-align:center;">
+        🧸 Carregando pacientes...
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-atualizar"
+      onclick="carregarPacientes()">
+      🔄 Atualizar lista
+    </button>
+  </div>
+
+  <!-- FORMULÁRIO DE TRIAGEM -->
+  <div class="triagem-box">
+    <h3 class="triagem-titulo">
+      🩺 Formulário de Triagem Infantil
+    </h3>
+
+    <div class="campo">
+      <label for="nome">👤 Nome do paciente</label>
+      <input
+        id="nome"
+        placeholder="Digite o nome da criança">
+    </div>
+
+    <div class="campo">
+      <label for="sintoma">🩺 Sintoma principal</label>
+      <select id="sintoma">
+        <option value="">Selecione o sintoma</option>
+        <option value="dor_leve">🤕 Dor leve</option>
+        <option value="resfriado">🤧 Resfriado</option>
+        <option value="coriza">🤧 Coriza</option>
+        <option value="tosse">😷 Tosse</option>
+        <option value="febre">🌡️ Febre</option>
+        <option value="vomito">🤢 Vômito</option>
+        <option value="diarreia">💧 Diarreia</option>
+        <option value="falta_ar_moderada">🫁 Falta de ar moderada</option>
+        <option value="falta_ar_grave">🫁 Falta de ar grave</option>
+        <option value="infarto">🚨 Suspeita de infarto</option>
+        <option value="avc">🚨 Suspeita de AVC</option>
+        <option value="convulsao">🚨 Convulsão</option>
+        <option value="hemorragia">🚨 Hemorragia</option>
+      </select>
+    </div>
+
+    <div class="campos-duplos">
+      <div class="campo">
+        <label for="temp">🌡️ Temperatura (°C)</label>
+        <input
+          id="temp"
+          type="number"
+          min="30"
+          max="45"
+          step="0.1"
+          placeholder="Ex.: 37.5">
+      </div>
+
+      <div class="campo">
+        <label for="alergia">⚠️ Alergias</label>
+        <input
+          id="alergia"
+          placeholder="Digite as alergias">
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="observacao">📝 Observações</label>
+      <textarea
+        id="observacao"
+        placeholder="Informações importantes sobre a criança..."></textarea>
+    </div>
+
+    <!-- BOTÃO DE ANÁLISE COM IA -->
+    <button
+      type="button"
+      class="btn-ia-risco"
+      id="btn-ia-risco"
+      onclick="gerarSugestaoRisco()">
+      🤖 Analisar paciente com IA
+    </button>
+
+    <!-- RESULTADO DA ANÁLISE -->
+    <div id="analise-ia" role="status" aria-live="polite"></div>
+
+    <div class="aviso-seguranca">
+      ⚠️ A análise da IA é apenas um apoio preliminar. Não substitui
+      avaliação clínica, protocolos de triagem pediátrica ou atendimento
+      de emergência. Sinais graves exigem avaliação imediata.
+    </div>
+
+    <div id="resultado"></div>
+
+    <button
+      type="button"
+      class="btn-salvar"
+      onclick="salvar()">
+      💚 Salvar Triagem
+    </button>
+  </div>
+</div>
+
+<script>
+async function lerResposta(resposta) {
+  const texto = await resposta.text();
+  let dados;
+
+  try {
+    dados = JSON.parse(texto);
+  } catch {
+    throw new Error(
+      "O servidor não retornou JSON válido. Verifique se a rota existe, " +
+      "se o endereço está correto e se o servidor está funcionando."
+    );
+  }
+
+  if (!resposta.ok) {
+    throw new Error(dados.erro || "O servidor apresentou um erro.");
+  }
+
+  return dados;
+}
+
+async function carregarPacientes() {
+  const div = document.getElementById("fila-pacientes");
+
+  try {
+    const resposta = await fetch("/pacientes");
+    
+    if (!resposta.ok) {
+      throw new Error("Servidor indisponível no momento.");
+    }
+
+    const pacientes = await lerResposta(resposta);
+
+    if (!Array.isArray(pacientes)) {
+      throw new Error("O servidor não retornou uma lista válida.");
+    }
+
+    const fila = pacientes.filter(p => p.status === "triagem");
+    div.replaceChildren();
+
+    if (fila.length === 0) {
+      div.innerHTML = `
+        <div style="text-align:center;padding:25px;color:#90a4ae;">
+          🧸 Nenhum pequeno paciente aguardando.
+          <br>
+          <small>A fila está tranquila! 💙</small>
+        </div>
+      `;
+      return;
+    }
+
+    fila.forEach(p => {
+      const item = document.createElement("div");
+      item.className = "fila-item";
+
+      const info = document.createElement("div");
+      info.className = "paciente-info";
+
+      const icone = document.createElement("div");
+      icone.className = "paciente-icone";
+      icone.textContent = "🧸";
+
+      const detalhes = document.createElement("div");
+      const nome = document.createElement("strong");
+      nome.textContent = p.nome || "Paciente";
+
+      const pequeno = document.createElement("small");
+      pequeno.textContent =
+        "CPF: " + (p.cpf || "—") +
+        " | Tipo: " + (p.tipo || "—");
+
+      detalhes.append(nome, pequeno);
+      info.append(icone, detalhes);
+
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = "btn-tv";
+      botao.textContent = "📺 Chamar na TV";
+
+      botao.addEventListener("click", () => {
+        chamarNaTV(p.nome);
+      });
+
+      item.append(info, botao);
+      div.appendChild(item);
+    });
+
+  } catch (erro) {
+    div.textContent = "";
+    const mensagem = document.createElement("p");
+    mensagem.style.color = "#78909c";
+    mensagem.style.textAlign = "center";
+    mensagem.innerHTML = "🧸 Fila offline ou sem conexão com o servidor.<br><small style='color:#90a4ae;'>Você ainda pode preencher a triagem normalmente.</small>";
+    div.appendChild(mensagem);
+  }
+}
+
+async function chamarNaTV(nome) {
+  try {
+    const resposta = await fetch("/tv/chamar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        localTipo: "GUICHÊ",
+        localNumero: "01",
+        paciente: nome
+      })
+    });
+
+    await lerResposta(resposta);
+    alert("✅ " + nome + " foi chamado na TV para o Guichê 01!");
+  } catch (erro) {
+    alert("❌ " + erro.message);
+  }
+}
+
+function classificarRisco(sintoma, temperatura) {
+  const vermelhos = [
+    "infarto",
+    "avc",
+    "convulsao",
+    "hemorragia",
+    "falta_ar_grave"
+  ];
+
+  const amarelos = [
+    "febre",
+    "vomito",
+    "diarreia",
+    "falta_ar_moderada"
+  ];
+
+  if (vermelhos.includes(sintoma) || temperatura >= 39) return "vermelho";
+  if (amarelos.includes(sintoma) || (temperatura >= 37.8 && temperatura < 39)) return "amarelo";
+  return "verde";
+}
+
+function gerarSugestaoRisco() {
+  const sintoma = document.getElementById("sintoma").value;
+  const temperaturaTexto = document.getElementById("temp").value;
+  const alergia = document.getElementById("alergia").value.trim();
+  const observacao = document.getElementById("observacao").value.trim();
+
+  const painel = document.getElementById("analise-ia");
+  const botao = document.getElementById("btn-ia-risco");
+
+  if (!sintoma) {
+    alert("🩺 Selecione o sintoma antes de solicitar a análise.");
+    return;
+  }
+
+  let temperatura = 0;
+  if (temperaturaTexto !== "") {
+    temperatura = Number(temperaturaTexto);
+    if (!Number.isFinite(temperatura) || temperatura < 30 || temperatura > 45) {
+      alert("Digite uma temperatura válida.");
+      return;
+    }
+  }
+
+  painel.style.display = "block";
+  painel.textContent = "🤖 Analisando as informações...";
+
+  botao.disabled = true;
+  botao.textContent = "⏳ Analisando...";
+
+  setTimeout(() => {
+    const risco = classificarRisco(sintoma, temperatura);
+
+    let porcentagem = "15%";
+    let statusGrave = "NÃO (Pouco Urgente)";
+    let fundoSuave = "#e8f5e9";
+    let borda = "#a5d6a7";
+    let corForte = "#1b5e20";
+    let causa = "Comum em infecções virais leves, resfriados comuns ou pequenas indisposições passageiras.";
+    let porquê = "Os sintomas informados não apresentam sinais vitais críticos ou risco iminente de descompensação.";
+
+    if (risco === "amarelo") {
+      porcentagem = "55%";
+      statusGrave
